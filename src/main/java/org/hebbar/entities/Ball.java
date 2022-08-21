@@ -58,11 +58,21 @@ public class Ball extends Entity {
         return this.ballY;
     }
 
+    public float getBallRadius() {
+        return ballRadius;
+    }
     public void setBallYPos(int y) {
         this.ballY = y;
     }
 
     public void setBallXPos(int x) {
         this.ballX = x;
+    }
+
+    public void reset() {
+        ballX = GetScreenWidth() / 2;
+        ballY = GetScreenHeight() / 2;
+        ballSpeedY = 300;
+        ballSpeedX = 300;
     }
 }

@@ -1,10 +1,10 @@
 package org.hebbar;
 
+import com.raylib.Jaylib;
 import org.hebbar.entities.Ball;
 import org.hebbar.entities.Paddle;
 
-import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Jaylib.RAYWHITE;
+import static com.raylib.Jaylib.*;
 import static com.raylib.Raylib.*;
 
 public class App {
@@ -20,6 +20,8 @@ public class App {
         int rectWidth = 10;
 
         float ballRadius = 10.0f;
+
+        String winnerText = "";
 
 
         Ball ball = new Ball(GetScreenWidth() / 2, GetScreenHeight() / 2, ballRadius, RAYWHITE);
@@ -48,6 +50,11 @@ public class App {
                 }
             }
 
+            if (IsKeyPressed(KEY_SPACE)) {
+                ball.reset();
+                winnerText = "";
+            }
+
             if (IsKeyDown(KEY_UP)) {
                 if (rightPaddle.getPaddleY() <= 0) {
                     rightPaddle.setPaddleY(0);
@@ -64,17 +71,49 @@ public class App {
                 }
             }
 
+            if (CheckCollisionCircleRec(new Jaylib.Vector2().x((float) ball.getBallXPos()).y((float) ball.getBallYPos()),
+                    ball.getBallRadius(), rightPaddle.getRect())) {
+                if (ball.ballSpeedX > 0) {
+                    ball.ballSpeedX *= -1.07;
+//                    ball.ballSpeedY = (ball.getBallYPos() - (rightPaddle.getPaddleY() + (rightPaddle.paddleHeight / 2))) /
+//                            (rightPaddle.paddleHeight / 2) * (-ball.ballSpeedX);
+                }
+            }
+
+            if (CheckCollisionCircleRec(new Jaylib.Vector2().x((float) ball.getBallXPos()).y((float) ball.getBallYPos()),
+                    ball.getBallRadius(), leftPaddle.getRect())) {
+                if (ball.ballSpeedX < 0) {
+                    ball.ballSpeedX *= -1.07;
+//                    ball.ballSpeedY = (ball.getBallYPos() - (leftPaddle.getPaddleY() + (leftPaddle.paddleHeight / 2))) /
+//                            (leftPaddle.paddleHeight / 2) * ball.ballSpeedX;
+                }
+            }
+
+            if (ball.getBallXPos() > GetScreenWidth()) {
+                winnerText = "Left Player Wins!";
+            }
+
+            if (ball.getBallXPos() < 0) {
+                winnerText = "Right Player Wins!";
+            }
+
+
             BeginDrawing();
 
-            DrawFPS(20, 20);
+                    DrawFPS(20, 20);
 
-            ClearBackground(BLACK);
+                    ClearBackground(BLACK);
 
-            leftPaddle.Draw();
+                    leftPaddle.Draw();
 
-            ball.Draw();
+                    ball.Draw();
 
-            rightPaddle.Draw();
+                    rightPaddle.Draw();
+
+                    if (!winnerText.equalsIgnoreCase("")) {
+                        int textWidth = MeasureText(winnerText, 40);
+                        DrawText(winnerText, GetScreenWidth() / 2 - textWidth / 2, GetScreenHeight() / 2, 40, YELLOW);
+                    }
 
             EndDrawing();
 

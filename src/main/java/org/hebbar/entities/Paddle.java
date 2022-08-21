@@ -39,6 +39,11 @@ public class Paddle extends Entity{
     }
 
 
+    public Jaylib.Rectangle getRect() {
+        return new Jaylib.Rectangle(paddleX, paddleY, paddleWidth, paddleHeight);
+    }
+
+
     @Override
     public void Draw() {
         DrawRectangle(paddleX, paddleY, paddleWidth, paddleHeight, color);
